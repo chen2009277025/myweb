@@ -6,6 +6,7 @@ var gulp = require('gulp'),
     concat = require("gulp-concat"),
     uglify = require("gulp-uglify"),
     minifyCss = require("gulp-minify-css"),
+    minifyHtml = require("gulp-minify-html"),
     less = require("gulp-less");
 
 
@@ -39,8 +40,14 @@ gulp.task('compile-plugins', function () {
         .pipe(minifyCss())
         .pipe(gulp.dest('public/plugins'));
 
-    gulp.src('dev/plugins/**/fonts/*.*')
+    gulp.src(['dev/plugins/**/fonts/**/*.*','dev/plugins/**/octicons/*.*'])
         .pipe(gulp.dest('public/plugins'));
 });
 
-gulp.task("default",['minify-js','compile-less','compile-plugins'])
+gulp.task('minify-html', function () {
+    gulp.src('dev/views/*.ejs') // 要压缩的html文件
+        .pipe(minifyHtml()) //压缩
+        .pipe(gulp.dest('views'));
+});
+
+gulp.task("default",['minify-js','compile-less','compile-plugins','minify-html'])
